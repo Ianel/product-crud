@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-center items-center h-screen">
         <form
-            class="my-12 flex flex-col justify-between items-stretch w-1/4 gap-4"
+            class="my-12 flex flex-col justify-between items-stretch w-full px-8 md:px-0 md:w-1/2 gap-4"
         >
             <label>
                 <p>Nom du produit</p>

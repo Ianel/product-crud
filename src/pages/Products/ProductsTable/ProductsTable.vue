@@ -1,5 +1,5 @@
 <template>
-    <table class="table-fixed border-collapse border-spacing-2">
+    <table class="table-auto border-collapse border-spacing-2">
         <thead>
             <th class="px-4 py-2 w-64 bg-blue-300 border border-slate-300">
                 Nom du produit
@@ -26,7 +26,7 @@
                     {{ product["description"] }}
                 </td>
                 <td
-                    class="px-4 py-2 border border-slate-300 flex flex-row justify-center items-center gap-4"
+                    class="px-4 py-2 border border-slate-300 flex flex-row justify-center items-center h-full gap-4"
                 >
                     <button @click="updateProduct(product)">
                         <font-awesome-icon icon="fa-solid fa-pen-to-square" />

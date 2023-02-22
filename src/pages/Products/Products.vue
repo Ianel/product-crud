@@ -12,9 +12,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { API_URL } from "../../constants/urls";
+import { IProductFull } from "../../interfaces";
 import ProductsTable from "./ProductsTable/ProductsTable.vue";
 
-const productsList = ref([]);
+const productsList = ref<IProductFull[]>([]);
 
 async function getProducts() {
     const res = await fetch(API_URL);

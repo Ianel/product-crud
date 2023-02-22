@@ -31,7 +31,7 @@
                     name="productDescription"
                     placeholder="Description du produit"
                     class="mt-2 h-32 rounded-sm outline outline-blue-200 py-2 px-4 min-w-full"
-                    v-model="productItem.desc"
+                    v-model="productItem.description"
                 ></textarea>
             </label>
             <button
@@ -56,19 +56,23 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 import { API_URL } from "../../../constants/urls";
 import { IProduct } from "../../../interfaces/IProduct";
 
 let route = useRoute();
+let router = useRouter();
 
-let productItem = ref({
+let productItem = ref<IProduct>({
     name: "",
-    price: "",
-    desc: "",
+    price: 0,
+    description: "",
 });
 
-let isUpdating = ref(false);
+let isUpdating = ref<boolean>(false);
+
+let toast = useToast();
 
 async function getProduct() {
     const res = await fetch(`${API_URL}/${route.params.productId}`);
@@ -86,7 +90,7 @@ onMounted(async () => {
     }
 });
 
-function updateProduct($event: any) {
+function updateProduct($event: Event) {
     $event.preventDefault();
 
     fetch(`${API_URL}/${route.params.productId}`, {
@@ -97,38 +101,55 @@ function updateProduct($event: any) {
         body: JSON.stringify({
             name: productItem.value.name,
             price: productItem.value.price,
-            description: productItem.value.desc,
+            description: productItem.value.description,
         }),
     })
         .then((res) => {
             if (res.status == 200) {
-                alert("Produit mis à jour avec succès");
+                toast.success("Produit mis à jour avec succès");
+                setTimeout(() => {
+                    router.push({ path: "/products" });
+                }, 5000);
             }
         })
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err.message));
 }
 
-function addProduct($event: any) {
+function addProduct($event: Event) {
     $event.preventDefault();
 
     let newProduct = {
         name: productItem.value.name,
         price: productItem.value.price,
-        description: productItem.value.desc,
+        description: productItem.value.description,
     };
 
-    fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProduct),
-    })
-        .then((res) => {
-            if (res.status == 201) {
-                alert("Produit crée avec succès");
-            }
+    if (
+        !productItem.value.name ||
+        !productItem.value.price ||
+        !productItem.value.description
+    ) {
+        toast.warning("Veuillez remplir tous les champs");
+        return;
+    } else {
+        fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newProduct),
         })
-        .catch((err) => alert(err));
+            .then((res) => {
+                if (res.status == 201) {
+                    toast.success("Produit crée avec succès");
+                    setTimeout(() => {
+                        router.push({ path: "/products" });
+                    }, 5000);
+                } else if (res.status == 409) {
+                    toast.error("Ce nom existe déjà");
+                }
+            })
+            .catch((err) => console.log(err.message));
+    }
 }
 </script>

@@ -41,14 +41,17 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+import { IProductFull } from "../../../interfaces";
 
 let router = useRouter();
-let route = useRoute();
 
-defineProps<{ products: any }>();
+let toast = useToast();
 
-function updateProduct(product: any) {
+defineProps<{ products: IProductFull[] }>();
+
+function updateProduct(product: IProductFull) {
     let URL = product["_links"]["self"]["href"];
 
     let productURL = URL.split("/")[4];
@@ -59,7 +62,7 @@ function updateProduct(product: any) {
     });
 }
 
-function deleteProduct(product: any) {
+function deleteProduct(product: IProductFull) {
     const URL = product["_links"]["self"]["href"];
 
     fetch(URL, {
@@ -67,8 +70,10 @@ function deleteProduct(product: any) {
     })
         .then((res) => {
             if (res.status == 204) {
-                alert("Produit supprimé avec succès");
-                window.location.reload();
+                toast.success("Produit supprimé avec succès");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
             }
         })
         .catch((err) => alert(err));

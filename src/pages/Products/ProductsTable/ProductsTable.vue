@@ -28,7 +28,7 @@
                 <td
                     class="px-4 py-2 border border-slate-300 flex flex-row justify-center items-center gap-4"
                 >
-                    <button>
+                    <button @click="updateProduct(product)">
                         <font-awesome-icon icon="fa-solid fa-pen-to-square" />
                     </button>
                     <button @click="deleteProduct(product)">
@@ -41,7 +41,23 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute, useRouter } from "vue-router";
+
+let router = useRouter();
+let route = useRoute();
+
 defineProps<{ products: any }>();
+
+function updateProduct(product: any) {
+    let URL = product["_links"]["self"]["href"];
+
+    let productURL = URL.split("/")[4];
+
+    router.push({
+        name: "Update Product",
+        params: { productId: productURL },
+    });
+}
 
 function deleteProduct(product: any) {
     const URL = product["_links"]["self"]["href"];

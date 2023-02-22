@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="bg-blue-600 px-4 py-2 text-white flex justify-between items-center"
+        class="bg-blue-600 px-4 py-3 text-white flex justify-between items-center"
     >
         <h1>Product Manager</h1>
         <div class="flex gap-4">

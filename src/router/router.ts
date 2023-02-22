@@ -19,6 +19,11 @@ const routes = [
         name: "Add Product",
         component: AddProduct,
     },
+    {
+        path: "/update-product/:productId",
+        name: "Update Product",
+        component: AddProduct,
+    },
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });

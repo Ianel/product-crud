@@ -30,8 +30,7 @@
                 <textarea
                     name="productDescription"
                     placeholder="Description du produit"
-                    rows="5"
-                    class="mt-2 rounded-sm outline outline-blue-200 py-2 px-4 min-w-full"
+                    class="mt-2 h-32 rounded-sm outline outline-blue-200 py-2 px-4 min-w-full"
                     v-model="productItem.desc"
                 ></textarea>
             </label>
@@ -95,7 +94,11 @@ function updateProduct($event: any) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(productItem.value),
+        body: JSON.stringify({
+            name: productItem.value.name,
+            price: productItem.value.price,
+            description: productItem.value.desc,
+        }),
     })
         .then((res) => {
             if (res.status == 200) {

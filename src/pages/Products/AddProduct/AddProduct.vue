@@ -93,26 +93,37 @@ onMounted(async () => {
 function updateProduct($event: Event) {
     $event.preventDefault();
 
-    fetch(`${API_URL}/${route.params.productId}`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            name: productItem.value.name,
-            price: productItem.value.price,
-            description: productItem.value.description,
-        }),
-    })
-        .then((res) => {
-            if (res.status == 200) {
-                toast.success("Produit mis à jour avec succès");
-                setTimeout(() => {
-                    router.push({ path: "/products" });
-                }, 5000);
-            }
+    if (
+        !productItem.value.name ||
+        !productItem.value.price ||
+        !productItem.value.description
+    ) {
+        toast.warning("Veuillez remplir tous les champs");
+        return;
+    } else {
+        fetch(`${API_URL}/${route.params.productId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: productItem.value.name,
+                price: productItem.value.price,
+                description: productItem.value.description,
+            }),
         })
-        .catch((err) => console.log(err.message));
+            .then((res) => {
+                if (res.status == 200) {
+                    toast.success("Produit mis à jour avec succès");
+                    setTimeout(() => {
+                        router.push({ path: "/products" });
+                    }, 5000);
+                } else if (res.status == 409) {
+                    toast.error("Ce nom existe déjà");
+                }
+            })
+            .catch((err) => console.log(err.message));
+    }
 }
 
 function addProduct($event: Event) {
